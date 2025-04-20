@@ -42,11 +42,18 @@ public class SecurityConfig {
                     http.requestMatchers("/oauth2/**", "/login/oauth2/code/**", "/css/**", "/js/**", "/img/**").permitAll();
                     //http.requestMatchers(HttpMethod.GET, "/api/clientes/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll();
-                    //http.requestMatchers(HttpMethod.POST, "/api/productos/**").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/api/productos/**").permitAll();
                     http.requestMatchers(HttpMethod.PUT, "/api/productos/**").permitAll();
                     http.requestMatchers(HttpMethod.GET, "/api/entradas/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/api/salidas/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/api/proveedores/**").permitAll();
+
                     //http.requestMatchers(HttpMethod.POST, "/api/ventas/**").permitAll();
-                    //http.requestMatchers(HttpMethod.GET, "/web/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/web/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/productos/**").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/productos/**").permitAll();
+                    http.requestMatchers(HttpMethod.DELETE, "/productos/**").permitAll();
 
                     // EndPoints Privados (Roles específicos)
                     http.requestMatchers(HttpMethod.GET, "/method/get").hasRole("ADMIN");
@@ -55,8 +62,13 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.PUT, "/method/put").hasRole("USER");
 //.hasAuthority("ROLE_USER");
                     http.requestMatchers("/api/entradas/**").hasRole("DEVELOPER");
+                    http.requestMatchers("/api/salidas/**").hasRole("DEVELOPER");
                     http.requestMatchers("/api/productos/**").hasRole("DEVELOPER");
+                    http.requestMatchers("/api/categorias/**").hasRole("DEVELOPER");
+                    http.requestMatchers("/api/proveedores/**").hasRole("DEVELOPER");
+                    http.requestMatchers("/api/reportes/**").hasRole("DEVELOPER");
                     http.requestMatchers("/web/**").hasAuthority("DEVELOPER");
+                    http.requestMatchers("/productos/**").hasAuthority("DEVELOPER");
 
                     // Denegar acceso a cualquier otra ruta no especificada
                     http.anyRequest().denyAll();

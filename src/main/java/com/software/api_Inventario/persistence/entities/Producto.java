@@ -18,34 +18,24 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String codigo;
-
     @Column(nullable = false)
     private String nombre;
-
     private String descripcion;
-
+    @Column(name = "precio_compra", nullable = false)
+    private double precioCompra;
+    @Column(name = "precio_venta", nullable = false)
+    private double precioVenta;
+    private int stock;
+    private int stockMinimo;
     @Column(nullable = false)
-    private String categoria;
+    private boolean estado;
 
-    @Column(name = "precio_compra", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioCompra;
-
-    @Column(name = "precio_venta", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioVenta;
-
-    @Column(name = "stock_actual", nullable = false)
-    private Integer stockActual;
-
-    @Column(name = "stock_minimo", nullable = false)
-    private Integer stockMinimo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "proveedor_id")
+    @ManyToOne
     private Proveedor proveedor;
 
-    @Column(nullable = false)
-    private Boolean activo = true;
+    @ManyToOne
+    private Categoria categoria;
+
 }

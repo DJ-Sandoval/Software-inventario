@@ -20,52 +20,28 @@ public class ProductoController {
     private final ProductoService productoService;
 
     @PostMapping
-    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO productoDTO) {
-        Producto nuevoProducto = productoService.crearProducto(productoDTO);
-        return new ResponseEntity<>(productoService.mapToDTO(nuevoProducto), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
-        Producto productoActualizado = productoService.actualizarProducto(id, producto);
-        return ResponseEntity.ok(productoActualizado);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
-        productoService.eliminarProducto(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long id) {
-        Producto producto = productoService.obtenerProductoPorId(id);
-        return ResponseEntity.ok(producto);
-    }
-
-    @GetMapping("/codigo/{codigo}")
-    public ResponseEntity<Producto> obtenerProductoPorCodigo(@PathVariable String codigo) {
-        Producto producto = productoService.obtenerProductoPorCodigo(codigo);
-        return ResponseEntity.ok(producto);
+    public Producto crearProducto(@RequestBody ProductoDTO dto) {
+        return productoService.crearProducto(dto);
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductoDTO>> listarTodosLosProductos(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<ProductoDTO> productos = productoService.listarTodosLosProductos(PageRequest.of(page, size));
-        return ResponseEntity.ok(productos);
+    public List<Producto> listarProductos() {
+        return productoService.listarProductos();
     }
 
-    @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<Producto>> listarProductosPorCategoria(@PathVariable String categoria) {
-        List<Producto> productos = productoService.listarProductosPorCategoria(categoria);
-        return ResponseEntity.ok(productos);
+    @GetMapping("/{id}")
+    public Producto obtenerProducto(@PathVariable Long id) {
+        return productoService.obtenerProductoPorId(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarProducto(@PathVariable Long id) {
+        productoService.eliminarProducto(id);
     }
 
     @GetMapping("/stock-bajo")
-    public ResponseEntity<List<Producto>> listarProductosConStockBajo() {
-        List<Producto> productos = productoService.listarProductosConStockBajo();
-        return ResponseEntity.ok(productos);
+    public List<Producto> productosConStockBajo() {
+        return productoService.listarProductosConStockBajo();
     }
+
 }

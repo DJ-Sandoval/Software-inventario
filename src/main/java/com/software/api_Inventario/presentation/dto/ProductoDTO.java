@@ -2,7 +2,6 @@ package com.software.api_Inventario.presentation.dto;
 
 import lombok.*;
 
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -10,16 +9,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ProductoDTO {
-    private Long id;
     private String codigo;
     private String nombre;
     private String descripcion;
-    private String categoria;
-    private BigDecimal precioCompra;
-    private BigDecimal precioVenta;
-    private Integer stockActual;
-    private Integer stockMinimo;
-    private Long proveedorId; // Usamos solo el id del proveedor en lugar del objeto completo
-    private Boolean activo;
+    private double precioCompra;
+    private double precioVenta;
+    private int stock;
+    private int stockMinimo;
+    private boolean estado;
+    private Long proveedorId;
+    private Long categoriaId;
 }
 

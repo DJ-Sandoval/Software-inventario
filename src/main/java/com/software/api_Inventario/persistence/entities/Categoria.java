@@ -3,23 +3,19 @@ package com.software.api_Inventario.persistence.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "proveedores")
-@Builder
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Proveedor {
+@Builder
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String nombre;
-    private String telefono;
-    private String correo;
-    private String direccion;
-    private String contacto;
+    private String descripcion;
+    @Column(nullable = false)
     private boolean estado;
 }
