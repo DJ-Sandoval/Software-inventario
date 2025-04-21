@@ -14,7 +14,7 @@ public class CategoriaController {
     @Autowired
     private ICategoriaService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<Categoria> listarCategorias() {
         return service.listarCategorias();
     }
@@ -29,7 +29,7 @@ public class CategoriaController {
         return service.crearCategoria(dto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void eliminarCategoria(Long id) {
         service.eliminarCategoria(id);
     }

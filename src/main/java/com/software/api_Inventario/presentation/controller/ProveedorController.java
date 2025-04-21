@@ -14,7 +14,7 @@ public class ProveedorController {
     @Autowired
     private IProveedorService service;
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<Proveedor> listarProveedores() {
         return service.listarProveedores();
     }

@@ -3,12 +3,23 @@
 <head>
     <title>Gestión de Productos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
 
-<h2>Lista de Productos</h2>
-<button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregar">+ Nuevo Producto</button>
+<h2 class="text-center">Lista de Productos</h2>
 
+<div class="d-flex justify-content-center gap-2 my-3">
+    <button class="btn btn-warning" onclick="cargarBajoStock()" data-bs-toggle="modal" data-bs-target="#modalBajoStock">
+        <i class="fas fa-box-open"></i> Bajo Stock
+    </button>
+    <a href="/reporte/productos/pdf" class="btn btn-danger"><i class="fas fa-file-pdf"></i>&nbsp;PDF</a>
+    <a href="/reporte/productos/excel" class="btn btn-success"><i class="fas fa-file-excel"></i>&nbsp;EXCELL</a>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
+        <i class="fas fa-plus"></i> Nuevo Producto
+    </button>
+</div>
 
 <table id="tablaProductos" class="table table-bordered">
     <thead>
@@ -40,8 +51,8 @@
                     <input type="number" class="form-control mb-2" id="precioCompraAgregar" placeholder="Precio Compra" required>
                     <input type="number" class="form-control mb-2" id="precioVentaAgregar" placeholder="Precio Venta" required>
                     <input type="number" class="form-control mb-2" id="stockAgregar" placeholder="Stock" required>
-                    <select id="proveedorId" class="form-control mb-2"></select>
-                    <select id="categoriaId" class="form-control mb-2"></select>
+                    <select id="proveedorIdAgregar" class="form-control mb-2"></select>
+                    <select id="categoriaIdAgregar" class="form-control mb-2"></select>
 
                 </div>
                 <div class="modal-footer">
@@ -53,6 +64,7 @@
 </div>
 
 <!-- Modal Editar -->
+<!-- Modal Editar - versión mejorada -->
 <div class="modal fade" id="modalEditar" tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form id="formEditar">
@@ -63,27 +75,54 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="idEditar">
+                    <input type="text" class="form-control mb-2" id="codigoEditar" placeholder="Código" required>
                     <input type="text" class="form-control mb-2" id="nombreEditar" placeholder="Nombre" required>
                     <input type="text" class="form-control mb-2" id="descripcionEditar" placeholder="Descripción">
-                    <input type="number" class="form-control mb-2" id="precioVentaEditar" placeholder="Precio Venta" required>
+                    <input type="number" step="0.01" class="form-control mb-2" id="precioCompraEditar" placeholder="Precio Compra" required>
+                    <input type="number" step="0.01" class="form-control mb-2" id="precioVentaEditar" placeholder="Precio Venta" required>
                     <input type="number" class="form-control mb-2" id="stockEditar" placeholder="Stock" required>
-                    <input type="number" class="form-control mb-2" id="proveedorIdEditar" placeholder="Proveedor ID" required>
-                    <input type="number" class="form-control mb-2" id="categoriaIdEditar" placeholder="Categoría ID" required>
+                    <input type="number" class="form-control mb-2" id="stockMinimoEditar" placeholder="Stock Mínimo" required>
+                    <select id="proveedorIdEditar" class="form-control mb-2" required></select>
+                    <select id="categoriaIdEditar" class="form-control mb-2" required></select>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Actualizar</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+</div>
+
+<!-- Modal Bajo Stock -->
+<!-- Modal Bajo Stock -->
+<div class="modal fade" id="modalBajoStock" tabindex="-1" aria-labelledby="modalBajoStockLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Productos con Bajo Stock</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="listaBajoStock">
+                    <!-- Aquí se cargan los productos -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     const apiUrl = 'http://localhost:2550/api/productos';
+    const listUrl = 'http://localhost:2550/api/productos/listar';
+    const createUrl = 'http://localhost:2550/api/productos'; // Sin /listar para POST
 
     // Cargar productos
     function cargarProductos() {
-        fetch(apiUrl)
+        fetch(listUrl)
             .then(res => res.json())
             .then(data => {
                 const tbody = document.querySelector("#tablaProductos tbody");
@@ -122,7 +161,7 @@
             categoriaId: parseInt(document.getElementById('categoriaIdAgregar').value),
             codigo: "GEN" + Date.now() // ejemplo de código automático
         };
-        fetch(apiUrl, {
+        fetch(createUrl, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(nuevoProducto)
@@ -137,32 +176,53 @@
 
     // Mostrar datos en modal editar
     function mostrarEditar(producto) {
-        document.getElementById('idEditar').value = producto.id;
-        document.getElementById('nombreEditar').value = producto.nombre;
-        document.getElementById('descripcionEditar').value = producto.descripcion;
-        document.getElementById('precioVentaEditar').value = producto.precioVenta;
-        document.getElementById('stockEditar').value = producto.stock;
-        document.getElementById('proveedorIdEditar').value = producto.proveedor.id;
-        document.getElementById('categoriaIdEditar').value = producto.categoria.id;
-        const modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
-        modalEditar.show();
-    }
+    document.getElementById('idEditar').value = producto.id;
+    document.getElementById('codigoEditar').value = producto.codigo;
+    document.getElementById('nombreEditar').value = producto.nombre;
+    document.getElementById('descripcionEditar').value = producto.descripcion;
+    document.getElementById('precioCompraEditar').value = producto.precioCompra;
+    document.getElementById('precioVentaEditar').value = producto.precioVenta;
+    document.getElementById('stockEditar').value = producto.stock;
+    document.getElementById('stockMinimoEditar').value = producto.stockMinimo;
+
+    // Seleccionar el proveedor y categoría correctos en los selects
+    const proveedorSelect = document.getElementById('proveedorIdEditar');
+    const categoriaSelect = document.getElementById('categoriaIdEditar');
+
+    proveedorSelect.value = producto.proveedor.id;
+    categoriaSelect.value = producto.categoria.id;
+
+    const modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
+    modalEditar.show();
+}
+
 
     function cargarProveedoresYCategorias() {
-    fetch('http://localhost:2550/api/proveedores')
+    fetch('http://localhost:2550/api/proveedores/listar')
         .then(res => res.json())
         .then(data => {
-            const select = document.getElementById('proveedorId');
-            select.innerHTML = data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+            // Para Agregar
+            const selectAgregar = document.getElementById('proveedorIdAgregar');
+            selectAgregar.innerHTML = data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+
+            // Para Editar
+            const selectEditar = document.getElementById('proveedorIdEditar');
+            selectEditar.innerHTML = data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
         });
 
-    fetch('http://localhost:2550/api/categorias')
+    fetch('http://localhost:2550/api/categorias/listar')
         .then(res => res.json())
         .then(data => {
-            const select = document.getElementById('categoriaId');
-            select.innerHTML = data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+            // Para Agregar
+            const selectAgregar = document.getElementById('categoriaIdAgregar');
+            selectAgregar.innerHTML = data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
+
+            // Para Editar
+            const selectEditar = document.getElementById('categoriaIdEditar');
+            selectEditar.innerHTML = data.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
         });
 }
+
 
 
     // Editar producto
@@ -203,12 +263,48 @@
         }
     }
 
+    function cargarBajoStock() {
+  fetch(listUrl)
+    .then(res => res.json())
+    .then(data => {
+      const lista = document.getElementById('listaBajoStock');
+      lista.innerHTML = ''; // Limpiar antes
+
+      // Filtrar productos con stock menor o igual al mínimo
+      const productosBajoStock = data.filter(p => p.stock <= p.stockMinimo);
+
+      if (productosBajoStock.length === 0) {
+        const item = document.createElement('li');
+        item.className = 'list-group-item text-center text-success';
+        item.textContent = 'No hay productos con bajo stock.';
+        lista.appendChild(item);
+        return;
+      }
+
+      // Agregar los productos a la lista
+      productosBajoStock.forEach(producto => {
+        const item = document.createElement('li');
+        item.className = 'list-group-item d-flex justify-content-between align-items-center';
+        item.innerHTML = `
+          <span><strong>${producto.nombre}</strong> (${producto.categoria.nombre})</span>
+          <span class="badge bg-danger rounded-pill">${producto.stock}</span>
+        `;
+        lista.appendChild(item);
+      });
+    })
+    .catch(err => {
+      console.error('Error cargando productos:', err);
+    });
+}
+
+
+
     // Inicial
     cargarProductos();
     cargarProveedoresYCategorias();
 </script>
 
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

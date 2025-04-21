@@ -41,41 +41,54 @@ public class SecurityConfig {
                     http.requestMatchers("/actuator/**").permitAll(); // Actuator
                     http.requestMatchers("/oauth2/**", "/login/oauth2/code/**", "/css/**", "/js/**", "/img/**").permitAll();
                     //http.requestMatchers(HttpMethod.GET, "/api/clientes/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/api/productos/**").permitAll();
-                    http.requestMatchers(HttpMethod.POST, "/api/productos/**").permitAll();
-                    http.requestMatchers(HttpMethod.PUT, "/api/productos/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/api/entradas/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/api/salidas/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/api/proveedores/**").permitAll();
 
+                    // Sistema/stock-bajo
+                    http.requestMatchers( "/api/productos/**").permitAll();
+                    http.requestMatchers( "/api/entradas/**").permitAll();
+                    http.requestMatchers( "/api/salidas/listar").permitAll();
+                    http.requestMatchers( "/api/categorias/listar").permitAll();
+                    http.requestMatchers( "/api/proveedores/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "/web/login").permitAll();
+                    http.requestMatchers( "/web/registro").permitAll();
+                    http.requestMatchers( "/web/home").permitAll();
+                    http.requestMatchers( "/productos/**").permitAll();
+                    http.requestMatchers( "/reporte/productos/**").permitAll();
+                    http.requestMatchers( "/reports/**").permitAll();
                     //http.requestMatchers(HttpMethod.POST, "/api/ventas/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/web/**").permitAll();
-                    http.requestMatchers(HttpMethod.GET, "/productos/**").permitAll();
-                    http.requestMatchers(HttpMethod.POST, "/productos/**").permitAll();
-                    http.requestMatchers(HttpMethod.DELETE, "/productos/**").permitAll();
 
                     // EndPoints Privados (Roles específicos)
                     http.requestMatchers(HttpMethod.GET, "/method/get").hasRole("ADMIN");
                     http.requestMatchers(HttpMethod.POST, "/method/post").hasRole("USER");
                     http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasRole("ADMIN");
                     http.requestMatchers(HttpMethod.PUT, "/method/put").hasRole("USER");
-//.hasAuthority("ROLE_USER");
-                    http.requestMatchers("/api/entradas/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/api/salidas/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/api/productos/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/api/categorias/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/api/proveedores/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/api/reportes/**").hasRole("DEVELOPER");
-                    http.requestMatchers("/web/**").hasAuthority("DEVELOPER");
-                    http.requestMatchers("/productos/**").hasAuthority("DEVELOPER");
+//.hasAuthority("ROLE_USER");http.requestMatchers(HttpMethod.GET, "/web/login").permitAll();
+                    // Endpoints privados Metodos Get
+                    /*
 
-                    // Denegar acceso a cualquier otra ruta no especificada
-                    http.anyRequest().denyAll();
+                    http.requestMatchers(HttpMethod.GET,"/productos/lista").hasAnyRole("ADMIN", "DEVELOPER", "USER", "INVITED");
+                    http.requestMatchers(HttpMethod.POST, "/productos/**").hasAnyRole("ADMIN", "DEVELOPER", "USER", "INVITED");
+                    http.requestMatchers(HttpMethod.DELETE, "/productos/**").permitAll();
+                    http.requestMatchers(HttpMethod.GET,"/api/reportes/movimientos").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.GET,"/api/reportes/finanzas").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.POST,"/api/entradas/**").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.POST,"/api/salidas/**").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.POST,"/api/productos/**").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.POST,"/api/categorias/**").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.POST,"/api/proveedores/**").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    http.requestMatchers(HttpMethod.GET,"/web/home").hasAnyRole("ADMIN", "DEVELOPER", "USER");
+                    */
+                    // Endpoints privados Metodos PUT
+
+                    // Endpoints privados Metodos DELETE
+                    //http.requestMatchers(HttpMethod.GET,"/productos/lista").authenticated();
+                    //http.requestMatchers(HttpMethod.PUT, "/api/productos/{id}").hasAnyRole("USER", "ADMIN", "DEVELOPER");
+                    //http.requestMatchers(HttpMethod.DELETE, "/api/productos/{id}").hasAnyRole("ADMIN", "DEVELOPER");
+
+                    http.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 ->
                         oauth2
-                                .loginPage("/auth/login") // tu página de login personalizada
+                                .loginPage("/web/login") // tu página de login personalizada
                                 .defaultSuccessUrl("/web/home", true) // redirige tras login OAuth
                                 .failureUrl("/auth/login?error=true") // opcional para manejar errores
                 )

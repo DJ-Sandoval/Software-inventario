@@ -57,6 +57,39 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
+    public Producto actualizarProducto(Long id, ProductoDTO dto) {
+        Producto productoExistente = productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + id));
+
+        // Verificamos y actualizamos proveedor si es diferente
+        if (!productoExistente.getProveedor().getId().equals(dto.getProveedorId())) {
+            Proveedor proveedor = proveedorRepository.findById(dto.getProveedorId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado"));
+            productoExistente.setProveedor(proveedor);
+        }
+
+        // Verificamos y actualizamos categoría si es diferente
+        if (!productoExistente.getCategoria().getId().equals(dto.getCategoriaId())) {
+            Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
+            productoExistente.setCategoria(categoria);
+        }
+
+        // Actualizamos los demás campos
+        productoExistente.setCodigo(dto.getCodigo());
+        productoExistente.setNombre(dto.getNombre());
+        productoExistente.setDescripcion(dto.getDescripcion());
+        productoExistente.setPrecioCompra(dto.getPrecioCompra());
+        productoExistente.setPrecioVenta(dto.getPrecioVenta());
+        productoExistente.setStock(dto.getStock());
+        productoExistente.setStockMinimo(dto.getStockMinimo());
+        productoExistente.setEstado(dto.isEstado());
+
+        return productoRepository.save(productoExistente);
+    }
+
+    @Override
     public Producto obtenerProductoPorId(Long id) {
         return productoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));

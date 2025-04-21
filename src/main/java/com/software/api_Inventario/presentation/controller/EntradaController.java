@@ -20,7 +20,7 @@ public class EntradaController {
         return entradaService.registrarEntrada(dto);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<Entrada> listarEntradas() {
         return entradaService.listarEntradas();
     }

@@ -1,10 +1,8 @@
-package com.software.api_Inventario.service.reports;
+package com.software.api_Inventario.service.reports.PDF;
 
 import com.software.api_Inventario.persistence.entities.Entrada;
-import com.software.api_Inventario.persistence.entities.Producto;
 import com.software.api_Inventario.persistence.entities.Salida;
 import com.software.api_Inventario.persistence.repository.EntradaRepository;
-import com.software.api_Inventario.persistence.repository.ProductoRepository;
 import com.software.api_Inventario.persistence.repository.SalidaRepository;
 import com.software.api_Inventario.service.interfaces.IReporteFinancieroService;
 import org.apache.poi.ss.usermodel.*;
@@ -14,17 +12,11 @@ import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 
 @Service

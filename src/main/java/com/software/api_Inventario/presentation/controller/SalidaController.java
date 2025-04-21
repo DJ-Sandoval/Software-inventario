@@ -20,7 +20,7 @@ public class SalidaController {
         return salidaService.registrarSalida(dto);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<Salida> listarSalidas() {
         return salidaService.listarSalidas();
     }

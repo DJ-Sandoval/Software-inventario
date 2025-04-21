@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,14 @@ import java.util.List;
 public class ProductoController {
     private final ProductoService productoService;
 
+    //@PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER', 'USER') and hasAuthority('CREATE')")
     @PostMapping
     public Producto crearProducto(@RequestBody ProductoDTO dto) {
         return productoService.crearProducto(dto);
     }
 
-    @GetMapping
+
+    @GetMapping("/listar")
     public List<Producto> listarProductos() {
         return productoService.listarProductos();
     }
@@ -35,6 +38,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER') and hasAuthority('DELETE')")
     public void eliminarProducto(@PathVariable Long id) {
         productoService.eliminarProducto(id);
     }
@@ -42,6 +46,12 @@ public class ProductoController {
     @GetMapping("/stock-bajo")
     public List<Producto> productosConStockBajo() {
         return productoService.listarProductosConStockBajo();
+    }
+
+    @PutMapping("/{id}")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'DEVELOPER') and hasAuthority('UPDATE')")
+    public Producto actualizarProducto(@PathVariable Long id, @RequestBody ProductoDTO dto) {
+        return productoService.actualizarProducto(id, dto);
     }
 
 }

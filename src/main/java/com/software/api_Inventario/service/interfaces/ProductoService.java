@@ -10,6 +10,7 @@ import java.util.List;
 public interface ProductoService {
     Producto crearProducto(ProductoDTO dto);
     List<Producto> listarProductos();
+    Producto actualizarProducto(Long id, ProductoDTO dto);
     Producto obtenerProductoPorId(Long id);
     void eliminarProducto(Long id);
     List<Producto> listarProductosConStockBajo();
