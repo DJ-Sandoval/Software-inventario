@@ -43,7 +43,7 @@ public class SecurityConfig {
                     //http.requestMatchers(HttpMethod.GET, "/api/clientes/**").permitAll();
 
                     // Sistema/stock-bajo
-                    http.requestMatchers( "/api/productos/**").permitAll();
+                    http.requestMatchers( HttpMethod.GET,"/api/productos/**").permitAll();
                     http.requestMatchers( "/api/entradas/**").permitAll();
                     http.requestMatchers( "/api/salidas/listar").permitAll();
                     http.requestMatchers( "/api/categorias/listar").permitAll();
@@ -51,7 +51,6 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.GET, "/web/login").permitAll();
                     http.requestMatchers( "/web/registro").permitAll();
                     http.requestMatchers( "/web/home").permitAll();
-                    http.requestMatchers( "/productos/**").permitAll();
                     http.requestMatchers( "/reporte/productos/**").permitAll();
                     http.requestMatchers( "/reports/**").permitAll();
                     //http.requestMatchers(HttpMethod.POST, "/api/ventas/**").permitAll();
@@ -61,6 +60,11 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.POST, "/method/post").hasRole("USER");
                     http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasRole("ADMIN");
                     http.requestMatchers(HttpMethod.PUT, "/method/put").hasRole("USER");
+
+                    http.requestMatchers(HttpMethod.POST, "/api/productos/**").authenticated();
+                    http.requestMatchers(HttpMethod.PUT, "/api/productos/**").authenticated();
+                    http.requestMatchers(HttpMethod.DELETE, "/api/productos/**").authenticated();
+                    http.requestMatchers( HttpMethod.GET,"/productos/**").authenticated();
 //.hasAuthority("ROLE_USER");http.requestMatchers(HttpMethod.GET, "/web/login").permitAll();
                     // Endpoints privados Metodos Get
                     /*

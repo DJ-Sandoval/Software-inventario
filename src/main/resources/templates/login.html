@@ -1,60 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Iniciar sesión</title>
 </head>
-<body class="d-flex align-items-center justify-content-center vh-100 bg-light">
-<div class="card shadow-lg p-4" style="width: 22rem;">
-    <h3 class="text-center mb-4">Iniciar Sesión</h3>
+<body>
+<h1>Iniciar sesión</h1>
 
-    <div th:if="${param.error}" class="alert alert-danger">
-        Credenciales incorrectas
-    </div>
+<form id="loginForm">
+    <label for="username">Usuario:</label>
+    <input type="text" id="username" required /><br/>
 
-    <form id="loginForm">
-        <div class="mb-3">
-            <label for="username" class="form-label">Usuario</label>
-            <input type="text" id="username" name="username" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Contraseña</label>
-            <input type="password" id="password" name="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
-    </form>
-</div>
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" required /><br/>
+
+    <button type="submit">Ingresar</button>
+</form>
 
 <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        const loginData = {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        };
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('/auth/log-in', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            if (!response.ok) {
-                throw new Error('Credenciales incorrectas');
+        fetch('http://localhost:2550/auth/log-in', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include', // 👈 para enviar/recibir cookies HttpOnly
+            body: JSON.stringify(loginData)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("Login exitoso!");
+                window.location.href = "/web/home";
+            } else {
+                alert("Login incorrecto");
             }
-
-            const data = await response.json();
-            localStorage.setItem('jwtToken', data.accessToken);
-
-            // Redirigir al dashboard o página principal
-            window.location.href = '/web/home';
-        } catch (error) {
-            alert(error.message);
-        }
+        });
     });
 </script>
+
 </body>
 </html>
+

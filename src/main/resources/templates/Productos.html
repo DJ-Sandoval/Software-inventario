@@ -19,6 +19,9 @@
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">
         <i class="fas fa-plus"></i> Nuevo Producto
     </button>
+    <a href="/web/home" class="btn btn-primary">
+        <i class="fas fa-home"></i> Volver a Home
+    </a>
 </div>
 
 <table id="tablaProductos" class="table table-bordered">
@@ -164,6 +167,7 @@
         fetch(createUrl, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
             body: JSON.stringify(nuevoProducto)
         })
         .then(() => {
@@ -244,6 +248,7 @@
         fetch(`${apiUrl}/${id}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
             body: JSON.stringify(productoEditado)
         })
         .then(() => {
@@ -257,6 +262,7 @@
     function eliminarProducto(id) {
         if (confirm('¿Seguro que deseas eliminar este producto?')) {
             fetch(`${apiUrl}/${id}`, {
+                credentials: 'include',
                 method: 'DELETE'
             })
             .then(() => cargarProductos());
