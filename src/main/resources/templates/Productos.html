@@ -265,7 +265,14 @@
                 credentials: 'include',
                 method: 'DELETE'
             })
-            .then(() => cargarProductos());
+            .then(response => {
+                if (response.ok) {
+                    cargarProductos();
+                } else {
+                    alert("No se pudo eliminar. Verifica tus permisos o inicia sesion.");
+                }
+            })
+            .catch(err => console.error("Error al eliminar producto:", err));
         }
     }
 
